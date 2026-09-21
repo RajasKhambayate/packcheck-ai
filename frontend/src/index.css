@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  font-family: 'Inter', sans-serif;
+  background-color: #F6F5F1;
+}
+
+.font-display {
+  font-family: 'Fraunces', serif;
+}
+
+.font-mono-tag {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+::selection {
+  background-color: #D8A73D;
+  color: #0F1524;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #d6d2c4;
+  border-radius: 999px;
+}

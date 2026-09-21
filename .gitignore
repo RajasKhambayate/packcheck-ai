@@ -1,0 +1,22 @@
+# --- Backend ---
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.db
+backend/.env
+backend/app/static/uploads/*
+!backend/app/static/uploads/.gitkeep
+backend/app/static/reports/*
+!backend/app/static/reports/.gitkeep
+backend/.venv/
+backend/venv/
+
+# --- Frontend ---
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# --- OS / editor ---
+.DS_Store
+.idea/
+.vscode/
+*.log

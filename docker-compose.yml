@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: packcheck
+      POSTGRES_PASSWORD: packcheck
+      POSTGRES_DB: packcheck
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U packcheck"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg2://packcheck:packcheck@db:5432/packcheck
+      SECRET_KEY: ${SECRET_KEY:-change-this-secret-in-production-please}
+      CORS_ORIGINS: "*"
+      ENV: production
+    volumes:
+      - uploads_data:/app/app/static/uploads
+      - reports_data:/app/app/static/reports
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  db_data:
+  uploads_data:
+  reports_data:
