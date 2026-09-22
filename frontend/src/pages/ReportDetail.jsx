@@ -7,11 +7,17 @@ import api from '../api/client'
 export default function ReportDetail() {
   const { id } = useParams()
   const [scan, setScan] = useState(null)
+  const [error, setError] = useState(null)
   const [downloading, setDownloading] = useState(null)
 
-  useEffect(() => {
-    api.get(`/products/${id}`).then((res) => setScan(res.data))
-  }, [id])
+  const loadScan = () => {
+    setError(null)
+    api.get(`/products/${id}`)
+      .then((res) => setScan(res.data))
+      .catch(() => setError('Could not load this report. If the site was idle, the server may still be waking up.'))
+  }
+
+  useEffect(() => { loadScan() }, [id])
 
   const download = async (format) => {
     setDownloading(format)
@@ -27,6 +33,19 @@ export default function ReportDetail() {
     } finally {
       setDownloading(null)
     }
+  }
+
+  if (error) {
+    return (
+      <AppShell>
+        <div className="max-w-5xl mx-auto px-8 py-16 text-center">
+          <p className="text-sm text-ink-900/60 mb-4">{error}</p>
+          <button onClick={loadScan} className="bg-ink-950 text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-ink-900 transition-colors">
+            Retry
+          </button>
+        </div>
+      </AppShell>
+    )
   }
 
   if (!scan) {

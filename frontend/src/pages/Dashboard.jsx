@@ -12,16 +12,36 @@ export default function Dashboard() {
   const [stats, setStats] = useState(null)
   const [recent, setRecent] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  useEffect(() => {
+  const loadData = () => {
+    setLoading(true)
+    setError(null)
     Promise.all([
       api.get('/dashboard/stats'),
       api.get('/products', { params: { limit: 6 } }),
     ]).then(([s, p]) => {
       setStats(s.data)
       setRecent(p.data)
+    }).catch(() => {
+      setError('Could not load dashboard data. If the site was idle for a while, the server may still be waking up — try again in a few seconds.')
     }).finally(() => setLoading(false))
-  }, [])
+  }
+
+  useEffect(() => { loadData() }, [])
+
+  if (error) {
+    return (
+      <AppShell>
+        <div className="max-w-6xl mx-auto px-8 py-16 text-center">
+          <p className="text-sm text-ink-900/60 mb-4">{error}</p>
+          <button onClick={loadData} className="bg-ink-950 text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-ink-900 transition-colors">
+            Retry
+          </button>
+        </div>
+      </AppShell>
+    )
+  }
 
   return (
     <AppShell>
